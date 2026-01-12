@@ -18,14 +18,14 @@ jobs:
 
       - name: Create trigger file
         run: |
-          echo "Ping at $(date)" > .vercel_trigger.txt
+          echo "Ping at $(date)" > .vercel_trigger1.txt
       - name: Commit and push trigger
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add .vercel_trigger.txt
+          git add .vercel_trigger1.txt
           git commit -m "Trigger Vercel at $(date)" || echo "No changes"
           git push
       - name: Clean older trigger files (optional)
         run: |
-          find . -name ".vercel_trigger.txt" -mtime +2 -delete || true
+          find . -name ".vercel_trigger1.txt" -mtime +2 -delete || true
