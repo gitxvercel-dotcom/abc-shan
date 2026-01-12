@@ -2,30 +2,31 @@ name: Auto Vercel Trigger
 
 on:
   schedule:
-    - cron: "0 */8 * * *"   # every 8 hours
+    - cron: "0 * * * *"   # every 1 hour
   workflow_dispatch:
+
+concurrency:
+  group: vercel-trigger
+  cancel-in-progress: true
 
 jobs:
   trigger:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Random delay (0â€“60 seconds)
+      - name: Small random delay (avoid collisions)
         run: sleep $((RANDOM % 60))
 
-      - name: Create trigger file
+      - name: Update trigger file
         run: |
           echo "Ping at $(date)" > .vercel_trigger.txt
-      - name: Commit and push trigger
+
+      - name: Commit & push
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add .vercel_trigger.txt
-          git commit -m "Trigger Vercel at $(date)" || echo "No changes"
+          git commit -m "Keep bot alive $(date)" || echo "No changes"
           git push
-      - name: Clean older trigger files (optional)
-        run: |
-          find . -name ".vercel_trigger.txt" -mtime +2 -delete || true
