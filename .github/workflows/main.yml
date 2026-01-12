@@ -1,4 +1,4 @@
-name: Auto Vercel Trigger
+name: Auto Vercel Trigger1
 
 on:
   schedule:
